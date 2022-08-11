@@ -5,11 +5,15 @@ const tokens = (N) => ethers.utils.parseUnits(N.toString(), 'ether');
 
 describe("Token", function () {
   let token;
+  let deployer;
+  let accounts;
   beforeEach(async () => {
     // Code Goes Here...
     // Fetch Token From Blockchain
     const Token = await ethers.getContractFactory("Token");
     token = await Token.deploy('Dapp University', 'DAPP', '1000000');
+    accounts = await ethers.getSigners();
+    deployer = accounts[0];
   });
 
   describe('Deployment', () => {
@@ -33,6 +37,10 @@ describe("Token", function () {
     
       it("Has Correct Total Supply", async function () {
         expect(await token.totalSupply()).to.equal(totalSupply);
+      });
+
+      it("assigns total supply to deployer", async function () {
+        expect(await token.balanceOf(deployer.address)).to.equal(totalSupply);
       });
 
   })
