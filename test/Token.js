@@ -5,7 +5,7 @@ const tokens = (N) => ethers.utils.parseUnits(N.toString(), 'ether');
 
 describe("Token", function () {
   let token;
-  let deployer;
+  let deployer, exchange;
   let accounts, receiver;
   beforeEach(async () => {
     // Code Goes Here...
@@ -15,6 +15,7 @@ describe("Token", function () {
     accounts = await ethers.getSigners();
     deployer = accounts[0];
     receiver = accounts[1];
+    exchange = accounts[2];
   });
 
   describe('Deployment', () => {
@@ -87,6 +88,27 @@ describe("Token", function () {
         await expect(token.connect(deployer).transfer('0x0000000000000000000000000000000000000000', TestAmount)).to.be.reverted;
 
       })
+    })
+  })
+
+  describe('Approving Tokens', () => {
+    let amount, transaction, result;
+
+    beforeEach(async () => {
+      amount = tokens(100)
+      // transfer tokens
+      transaction = await token.connect(deployer).approve(exchange.address, amount);
+      result = await transaction.wait();
+    })
+
+    describe('Success', () => {
+      it('Allocates an allowance for delegated token spending', async () => {
+        expect(await token.allowance(deployer.address, exchange.address)).to.equal(amount);
+      })
+
+    describe('Failure', () => {
+
+    })
     })
   })
 
