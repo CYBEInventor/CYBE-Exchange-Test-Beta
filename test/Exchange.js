@@ -38,16 +38,16 @@ describe("Exchange", function () {
   describe('Depositing tokens', () => {
     let transaction, result;
     let amount = tokens(10);
-    beforeEach(async () => {
-        // Approve Token
-        transaction = await token1.connect(user1).approve(exchange.address, amount);
-        result = await transaction.wait();
-        // Deposit Token
-        transaction = await exchange.connect(user1).depositToken(token1.address, amount);
-        result = await transaction.wait();
-    });
-    // REMEMBER that before each will run when it has something to test with.
     describe('Success', () => {
+        beforeEach(async () => {
+            // Approve Token
+            transaction = await token1.connect(user1).approve(exchange.address, amount);
+            result = await transaction.wait();
+            // Deposit Token
+            transaction = await exchange.connect(user1).depositToken(token1.address, amount);
+            result = await transaction.wait();
+        });
+        // REMEMBER that before each will run when it has something to test with.
         it('tracks the token deposit', async () => {
             expect(await token1.balanceOf(exchange.address)).to.equal(amount)
             expect(await exchange.tokens(token1.address, user1.address)).to.equal(amount)
@@ -71,6 +71,69 @@ describe("Exchange", function () {
             await expect(exchange.connect(user1).depositToken(token1.address, amount)).to.be.reverted;
         })
     })
-  })
+  });
+
+  describe('Withdrawing tokens', () => {
+    let transaction, result;
+    let amount = tokens(10);
+    
+    describe('Success', () => {
+        beforeEach(async () => {
+            // Deposit token before withdrawing
+            // Approve Token
+            transaction = await token1.connect(user1).approve(exchange.address, amount);
+            result = await transaction.wait();
+            // Deposit Token
+            transaction = await exchange.connect(user1).depositToken(token1.address, amount);
+            result = await transaction.wait();
+
+            // Now withdraw tokens
+            transaction = await exchange.connect(user1).withdrawToken(token1.address, amount)
+            result = await transaction.wait()
+        });
+        // REMEMBER that before each will run when it has something to test with.
+        it('withdraws token funds', async () => {
+            expect(await token1.balanceOf(exchange.address)).to.equal(0)
+            expect(await exchange.tokens(token1.address, user1.address)).to.equal(0)
+            expect(await exchange.balanceOf(token1.address, user1.address)).to.equal(0)
+        });
+
+        it('Emits a Withdraw event', async () => {
+            const event = result.events[1]; // 2 events are emitted
+            expect(event.event).to.equal('Withdraw');
+            const args = event.args;
+            expect(args.token).to.equal(token1.address);
+            expect(args.user).to.equal(user1.address);
+            expect(args.amount).to.equal(amount);
+            expect(args.balance).to.equal(0);
+          });
+
+    })
+
+    describe('Failure', () => {
+        it('Fails for insufficient balances', async () => {
+            // Attempt to withdraw tokens without depositing
+            await expect(exchange.connect(user1).withdrawToken(token1.address, amount)).to.be.reverted;
+        });
+    })
+  });
+
+  describe('Checking Balances', () => {
+    let transaction, result;
+    let amount = tokens(1);
+    beforeEach(async () => {
+        // Approve Token
+        transaction = await token1.connect(user1).approve(exchange.address, amount);
+        result = await transaction.wait();
+        // Deposit Token
+        transaction = await exchange.connect(user1).depositToken(token1.address, amount);
+        result = await transaction.wait();
+    });
+    // REMEMBER that before each will run when it has something to test with.
+    it('returns user balance', async () => {
+        expect(await exchange.balanceOf(token1.address, user1.address)).to.equal(amount)
+    });
+
+  });
 
 });
