@@ -27,6 +27,16 @@ contract Exchange {
         uint256 amountGive,
         uint256 timestamp
     );
+
+    event Cancel (
+        uint256 id,
+        address user,
+        address tokenGet,
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive,
+        uint256 timestamp
+    );
     
     // in a way, its treated as a generic database
     struct _Order { 
@@ -114,7 +124,24 @@ contract Exchange {
     function cancelOrder(uint256 _id) public {
         // Fetch Order
         _Order storage _order = orders[_id];
+        // Ensure the caller of the function is the owner of the owner
+        require(address(_order.user) == msg.sender);
+
+        // Order must exist
+        require(_order.id == _id);
+
         // Cancel the order
         orderCancelled[_id] = true;
+
+        // Emit event
+        emit Cancel(
+            _order.id, //id - 1, 2, 3 ...
+            msg.sender, // user
+            _order.tokenGet, // tokenGet
+            _order.amountGet, // amountGet
+            _order.tokenGive, // tokenGive
+            _order.amountGive, // amountGive
+            block.timestamp // timestamp .. 1893507958
+        );
     }
 }
