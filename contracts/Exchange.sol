@@ -10,9 +10,34 @@ contract Exchange {
     address public feeAccount;
     uint256 public feePercent;
     mapping(address => mapping(address => uint256)) public tokens;
+    // Orders Mapping
+     mapping(uint256 => _Order) public orders;
+     uint256 public orderCount;
 
     event Deposit(address token, address user, uint256 amount, uint256 balance);
     event Withdraw(address token, address user, uint256 amount, uint256 balance);
+
+    event Order (
+        uint256 id,
+        address user,
+        address tokenGet,
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive,
+        uint256 timestamp
+    );
+    
+    // in a way, its treated as a generic database
+    struct _Order { 
+        // Attributes of an order
+        uint256 id; // Unique identifier for order
+        address user; // User who made order
+        address tokenGet; // Address of the token they receive
+        uint256 amountGet; //Amount they receive
+        address tokenGive; // Address of token they give
+        uint256 amountGive; // Amount they give
+        uint256 timestamp; // When order was created
+    }
 
     constructor(address _feeAccount, uint256 _feePercent){
         feeAccount = _feeAccount;
@@ -49,5 +74,39 @@ contract Exchange {
     function balanceOf(address _token, address _user) public view 
         returns (uint256){
             return tokens[_token][_user];
+    }
+
+    // ---------------
+    // MAKE & CANCEL ORDERS
+    // Token Give (the token they want to spend) - which token, and how much?
+    // token Get (the token they want to receive) - which token, and how much?
+    function makeOrder(address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) public {
+        // Token Give (the token they want to spend) - which token, and how much?
+        // token Get (the token they want to receive) - which token, and how much?
+        // Require token balance .. Prevent orders if tokens aren't on exchange
+        require(balanceOf(_tokenGive, msg.sender) >= _amountGive);
+        // Instantiate a new order
+        orderCount = orderCount + 1;
+
+        orders[orderCount] = _Order(
+            orderCount, //id - 1, 2, 3 ...
+            msg.sender, // user
+            _tokenGet, // tokenGet
+            _amountGet, // amountGet
+            _tokenGive, // tokenGive
+            _amountGive, // amountGive
+            block.timestamp // timestamp .. 1893507958
+        );
+
+            // Emit event
+        emit Order(
+            orderCount, //id - 1, 2, 3 ...
+            msg.sender, // user
+            _tokenGet, // tokenGet
+            _amountGet, // amountGet
+            _tokenGive, // tokenGive
+            _amountGive, // amountGive
+            block.timestamp // timestamp .. 1893507958
+        );
     }
 }
