@@ -184,7 +184,43 @@ describe("Exchange", function () {
         token2.address, tokens(1), token1.address, tokens(1))
         ).to.be.reverted;
     })
-  })
+  });
+  });
+
+  describe('Order Actions', async () => {
+    let transaction, result;
+    let amount = tokens(1);
+    beforeEach(async () => {
+      // user1 Deposits Token
+      transaction = await token1.connect(user1).approve(exchange.address, amount);
+      result = await transaction.wait();
+      // Deposit Token
+      transaction = await exchange.connect(user1).depositToken(token1.address, amount);
+      result = await transaction.wait();
+
+      // Make Order
+      transaction = await exchange.connect(user1).makeOrder(token2.address, amount, token1.address, amount);
+      result = await transaction.wait();
+      // ^^ REMEMBER TO WAIT FOR TRANSACTIONS
+  });
+
+    describe('Cancelling Orders', async () => {
+      describe('Success', async () => {
+        beforeEach(async () => {
+          transaction = await exchange.connect(user1).cancelOrder(1)
+          result = await transaction.wait();
+        });
+
+        it('Updates cancelled order', async () => {
+          expect(await exchange.orderCancelled(1)).to.equal(true);
+        })
+        
+      });
+
+      describe('Failure', async () => {
+
+      });
+    });
   });
 
 });
