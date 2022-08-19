@@ -11,6 +11,8 @@ import {
   loadExchange
 } from '../store/interactions';
 
+import Navbar from "./Navbar";
+
 function App() {
 const dispatch = useDispatch();
 
@@ -34,7 +36,20 @@ const dispatch = useDispatch();
     // Fetch current netowork's chainId (e.g. hardhat: 31337, kovan: 42)
     const chainId = await loadNetwork(provider, dispatch);
     //  Fetch current account & balance from Metamask
-    await loadAccount(provider, dispatch);
+    // await loadAccount(provider, dispatch);
+
+    // Reload page when network changes
+    window.ethereum.on('chainChanged', () => {
+      window.location.reload();
+    })
+
+    // if the user changes their account then the account displayed should change.
+    window.ethereum.on('accountsChanged', () => {
+      loadAccount(provider, dispatch);
+    });
+    // ^^ this is a bug so far because a user could not be logged in but the account was still displayed.
+    // ^^^ FIXED
+    // user is logged out when switch accounts through hot wallet ... not a big deal tho.
 
     // Token Smart Contract .. NOW MOVED TO REDUX: interactions.js, than reducers.js, than back here
     // const token = new ethers.Contract(config[chainId].Dapp.address, TOKEN_ABI, provider)
@@ -59,6 +74,7 @@ const dispatch = useDispatch();
     <div>
 
       {/* Navbar */}
+      <Navbar />
 
       <main className='exchange grid'>
         <section className='exchange__section--left grid'>
