@@ -7,7 +7,8 @@ import {
   loadProvider, 
   loadNetwork, 
   loadAccount,
-  loadToken
+  loadTokens,
+  loadExchange
 } from '../store/interactions';
 
 function App() {
@@ -17,8 +18,8 @@ const dispatch = useDispatch();
     // const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
     // console.log(accounts[0]);
     // MOVED ACCOUNTS OVER TO INTERACTIONS
-    const account = await loadAccount(dispatch);
-    console.log(account)
+    // const account = await loadAccount(dispatch);
+    // console.log(account)
     // Connect Ethers to blockchain .. connect to blockchain
     // const provider = new ethers.providers.Web3Provider(window.ethereum);
     // dispatch({ type: 'PROVIDER_LOADED', connection: provider })
@@ -30,14 +31,24 @@ const dispatch = useDispatch();
     // const { chainId } = await provider.getNetwork();
     // console.log(chainId)
     // MOVED CHAINID OVER TO INTERACTIONS.JS
+    // Fetch current netowork's chainId (e.g. hardhat: 31337, kovan: 42)
     const chainId = await loadNetwork(provider, dispatch);
+    //  Fetch current account & balance from Metamask
+    await loadAccount(provider, dispatch);
 
     // Token Smart Contract .. NOW MOVED TO REDUX: interactions.js, than reducers.js, than back here
     // const token = new ethers.Contract(config[chainId].Dapp.address, TOKEN_ABI, provider)
     // console.log(token.address);
     // const symbol = await token.symbol();
     // console.log(symbol);
-    await loadToken(provider, config[chainId].Dapp.address, dispatch);
+    const Dapp = config[chainId].Dapp;
+    const mETH = config[chainId].mETH;
+    await loadTokens(provider, [Dapp.address, mETH.address], dispatch);
+
+    // load exchange Contract
+    // Load exchange smart contract
+    const Exchangeconfig = config[chainId].exchange
+    await loadExchange(provider, Exchangeconfig.address, dispatch)
   }
 
   useEffect(() => {
