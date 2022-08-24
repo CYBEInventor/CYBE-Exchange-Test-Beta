@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import TOKEN_ABI from '../abis/Token.json';
 import EXCHANGE_ABI from '../abis/Exchange.json';
+import { exchange } from "./reducers";
 // import { provider } from "./reducers";
 
 export const loadProvider = (dispatch) => {
@@ -20,6 +21,7 @@ export const loadNetwork = async (provider, dispatch) => {
 export const loadAccount = async (provider, dispatch) => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
     const account = ethers.utils.getAddress(accounts[0]);
+    //                                         ^^^^ from localhost node in testing
     dispatch({ type: 'ACCOUNT_LOADED', account });
     // ^^ in providers reducer
     let balance = await provider.getBalance(account);
@@ -49,4 +51,49 @@ export const loadExchange = async(provider, address, dispatch) => {
     dispatch({ type: 'EXCHANGE_LOADED', exchange });
 
     return exchange
+}
+
+// Subscribe To Events
+export const SubscribeToEvents = (exchange, dispatch) => {
+    exchange.on('Deposit', (token, user ,amount ,balance, event) => {
+    // [] Step 4: Notify app that transfer was successful
+        dispatch({ type: 'TRANSFER_SUCCESS', event })
+    })
+}
+
+// LOAD USER BALANCES (WALLET & EXCHANGE BALANCES)
+export const loadBalances = async(exchange, tokens, account, dispatch) => {
+    // const balance = await tokens[0].balanceOf(account);
+    // balance = ethers.utils.formatUnits(balance, 18)
+    // ^^^ two lines
+    let balance = ethers.utils.formatUnits(await tokens[0].balanceOf(account), 18);
+    dispatch({ type: 'TOKEN_1_BALANCE_LOADED', balance });
+
+    // await exchange.balanceOf(tokens[0].address, account);
+    // ^^^ reformatting
+    balance = ethers.utils.formatUnits(await exchange.balanceOf(tokens[0].address, account), 18)
+    dispatch({ type: 'EXCHANGE_TOKEN_1_BALANCE_LOADED', balance });
+
+    balance = ethers.utils.formatUnits(await tokens[1].balanceOf(account), 18);
+    dispatch({ type: 'TOKEN_2_BALANCE_LOADED', balance });
+
+    balance = ethers.utils.formatUnits(await exchange.balanceOf(tokens[1].address, account), 18)
+    dispatch({ type: 'EXCHANGE_TOKEN_2_BALANCE_LOADED', balance });
+}
+
+// TRANSFER TOKENS (DEPOSIT & WITHDRAWS)
+export const transferTokens = async (provider, exchange, transferType, token, amount, dispatch) => {
+    let transaction;
+    dispatch({ type: 'TRANSFER_REQUEST' });
+    try {
+    const signer = await provider.getSigner()
+    const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 18);
+    transaction = await token.connect(signer).approve(exchange.address, amountToTransfer);
+    await transaction.wait()
+    transaction = await exchange.connect(signer).depositToken(token.address, amountToTransfer);
+    
+    await transaction.wait()
+} catch(error){
+    dispatch({ type: 'TRANSFER_FAIL' });
+}
 }
