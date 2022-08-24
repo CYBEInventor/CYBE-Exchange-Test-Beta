@@ -12,6 +12,7 @@ import {
 } from '../store/interactions';
 
 import Navbar from "./Navbar";
+import Markets from "./Markets";
 
 function App() {
 const dispatch = useDispatch();
@@ -80,7 +81,7 @@ const dispatch = useDispatch();
         <section className='exchange__section--left grid'>
 
           {/* Markets */}
-
+          <Markets />
           {/* Balance */}
 
           {/* Order */}
