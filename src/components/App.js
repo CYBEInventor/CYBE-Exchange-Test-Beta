@@ -16,6 +16,10 @@ import Navbar from "./Navbar";
 import Markets from "./Markets";
 import Balance from "./Balance";
 
+/*    OVERALL NOTES
+  when the user isnt on the specific blockchain and connects their wallet, they are not prompt on the selection of blockchains.
+*/
+
 function App() {
 const dispatch = useDispatch();
 
