@@ -68,6 +68,18 @@ const depositHandler = (e, token) => {
 }
 // if a uncaught error of message "[ethjs-query] while formatting outputs from RPC" happens, reset the account being used.
 
+const withdrawHandler = (e, token) => {
+    e.preventDefault()
+    if (token.address === tokens[0].address){
+      transferTokens(provider, exchange, 'Withdraw', token, token1TransferAmount, dispatch)
+      setToken1TransferAmount(0);
+    } else {
+        transferTokens(provider, exchange, 'Withdraw', token, token2TransferAmount, dispatch);
+        setToken2TransferAmount(0);
+    }
+    console.log("withdrawing tokens")
+}
+
 useEffect(() => {
     if(exchange && tokens[0] && tokens[1] && account){
         loadBalances(exchange, tokens, account, dispatch);
@@ -93,7 +105,7 @@ useEffect(() => {
             <p><small>Exchange</small><br />{exchangenBalances && exchangenBalances[0]}</p>
           </div>
   
-          <form onSubmit={(e) => depositHandler(e, tokens[0])}>
+          <form onSubmit={isDeposit ? (e) => depositHandler(e, tokens[0]) : (e) => withdrawHandler(e, tokens[0])}>
             <label htmlFor="token0">{symbols && symbols[0]} Amount</label>
             <input 
             type="text" 
@@ -123,8 +135,8 @@ useEffect(() => {
             <p><small>Wallet</small><br />{tokenBalances && tokenBalances[1]}</p>
             <p><small>Exchange</small><br />{exchangenBalances && exchangenBalances[1]}</p>
           </div>
-  
-          <form onSubmit={(e) => depositHandler(e, tokens[1])}>
+                    {/* START HERE ... LOGIC ERROR HERE */}
+          <form onSubmit={isDeposit ? (e) => depositHandler(e, tokens[1]) : (e) => withdrawHandler(e, tokens[1])}>
             <label htmlFor="token1"></label>
             <input 
             type="text" 
