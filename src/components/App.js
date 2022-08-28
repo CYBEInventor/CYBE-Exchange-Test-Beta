@@ -15,6 +15,7 @@ import {
 import Navbar from "./Navbar";
 import Markets from "./Markets";
 import Balance from "./Balance";
+import Order from "./Order";
 
 /*    OVERALL NOTES
   when the user isnt on the specific blockchain and connects their wallet, they are not prompt on the selection of blockchains.
@@ -96,6 +97,7 @@ const dispatch = useDispatch();
           <Balance />
 
           {/* Order */}
+          <Order />
 
         </section>
         <section className='exchange__section--right grid'>

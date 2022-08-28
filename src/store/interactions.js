@@ -64,6 +64,11 @@ export const SubscribeToEvents = (exchange, dispatch) => {
     // [] Step 4: Notify app that transfer was successful
         dispatch({ type: 'TRANSFER_SUCCESS', event })
     });
+    
+    exchange.on('Order', (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event) => {
+        const order = event.args;
+        dispatch({ type: 'NEW_ORDER_SUCCESS', order, event })
+    });
 }
 
 // LOAD USER BALANCES (WALLET & EXCHANGE BALANCES)
@@ -105,4 +110,67 @@ export const transferTokens = async (provider, exchange, transferType, token, am
 } catch(error){
     dispatch({ type: 'TRANSFER_FAIL' });
 }
+}
+
+// ORDERS (BUY & SELL)
+export const makeBuyOrder = async (provider, exchange, tokens, order, dispatch) => {
+    /* address _tokenGet, 
+       uint256 _amountGet, 
+       address _tokenGive, 
+       uint256 _amountGive (OrderAmount * OrderPrice)
+
+                        -->NOTES<--
+            - In hardhat, there is an error when having multiple instance of the same object which conflict with redux. 
+            (This will probably be fixed in later versions)
+
+            - Also so far from 23. Make order i can make order while not logged in.. (potential error overall error course wise)
+    */
+
+        const tokenGet = tokens[0].address;
+        const amountGet = ethers.utils.parseUnits(order.amount, 18);
+        const tokenGive = tokens[1].address;
+        const amountGive = ethers.utils.parseUnits((order.amount * order.price).toString(), 18);
+
+        dispatch({ type: 'NEW_ORDER_REQUEST' });
+        try{
+            const signer = await provider.getSigner();
+            const transaction = await exchange.connect(signer).makeOrder(tokenGet, amountGet, tokenGive, amountGive);
+            await transaction.wait();
+        } catch(error){
+            dispatch({ type: 'NEW_ORDER_FAIL' });
+        }
+        // subscribe to emit function (IS IN "loadExchange" since its being loaded everytime something changes)
+
+
+}
+
+export const makeSellOrder = async (provider, exchange, tokens, order, dispatch) => {
+    /* address _tokenGet, 
+       uint256 _amountGet, 
+       address _tokenGive, 
+       uint256 _amountGive (OrderAmount * OrderPrice)
+
+                        -->NOTES<--
+            - In hardhat, there is an error when having multiple instance of the same object which conflict with redux. 
+            (This will probably be fixed in later versions)
+
+            - Also so far from 23. Make order i can make order while not logged in.. (potential error overall error course wise)
+    */
+
+        const tokenGet = tokens[1].address;
+        const amountGet = ethers.utils.parseUnits((order.amount * order.price).toString(), 18);
+        const tokenGive = tokens[0].address;
+        const amountGive = ethers.utils.parseUnits(order.amount, 18);
+
+        dispatch({ type: 'NEW_ORDER_REQUEST' });
+        try{
+            const signer = await provider.getSigner();
+            const transaction = await exchange.connect(signer).makeOrder(tokenGet, amountGet, tokenGive, amountGive);
+            await transaction.wait();
+        } catch(error){
+            dispatch({ type: 'NEW_ORDER_FAIL' });
+        }
+        // subscribe to emit function (IS IN "loadExchange" since its being loaded everytime something changes)
+
+
 }
