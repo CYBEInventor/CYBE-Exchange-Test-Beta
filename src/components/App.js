@@ -9,13 +9,15 @@ import {
   loadAccount,
   loadTokens,
   loadExchange,
-  SubscribeToEvents
+  SubscribeToEvents,
+  loadAllOrders
 } from '../store/interactions';
 
 import Navbar from "./Navbar";
 import Markets from "./Markets";
 import Balance from "./Balance";
 import Order from "./Order";
+import OrderBook from "./OrderBook";
 
 /*    OVERALL NOTES
   when the user isnt on the specific blockchain and connects their wallet, they are not prompt on the selection of blockchains.
@@ -71,7 +73,11 @@ const dispatch = useDispatch();
     // load exchange Contract
     // Load exchange smart contract
     const Exchangeconfig = config[chainId].exchange
-    const exchange = await loadExchange(provider, Exchangeconfig.address, dispatch)
+    const exchange = await loadExchange(provider, Exchangeconfig.address, dispatch);
+
+    // Fetch all orders: open, filled, cancelled
+    loadAllOrders(provider, exchange, dispatch);
+
     // Listen To Events
     SubscribeToEvents(exchange, dispatch);
     // ^^ being placed here for a higher level use
@@ -109,6 +115,7 @@ const dispatch = useDispatch();
           {/* Trades */}
 
           {/* OrderBook */}
+          <OrderBook />
 
         </section>
       </main>
