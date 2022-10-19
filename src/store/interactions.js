@@ -69,6 +69,11 @@ export const SubscribeToEvents = (exchange, dispatch) => {
         const order = event.args;
         dispatch({ type: 'NEW_ORDER_SUCCESS', order, event })
     });
+
+    exchange.on('Cancel', (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event) => {
+        const order = event.args;
+        dispatch({ type: 'ORDER_CANCEL_SUCCESS', order, event })
+    });
 }
 
 // LOAD USER BALANCES (WALLET & EXCHANGE BALANCES)
@@ -196,4 +201,18 @@ export const makeSellOrder = async (provider, exchange, tokens, order, dispatch)
         // subscribe to emit function (IS IN "loadExchange" since its being loaded everytime something changes)
 
 
+}
+
+// --------------------------------------------------------------------------
+// CANCEL ORDER
+export const cancelOrder = async (provider, exchange, order, dispatch) => {
+
+    dispatch({ type: 'ORDER_CANCEL_REQUEST' });
+        try{
+            const signer = await provider.getSigner();
+            const transaction = await exchange.connect(signer).cancelOrder(order.id)
+            await transaction.wait();
+        } catch(error){
+            dispatch({ type: 'ORDER_CANCEL_FAIL' });
+        }
 }
