@@ -14,7 +14,7 @@ const Trades = () => {
         </div>
 
         {!filledOrders || filledOrders.length === 0 ? (
-            <Banner text={"Bo Orders..."} />
+            <Banner text={"No Orders..."} />
         ) : (
             <table>
             <thead>
