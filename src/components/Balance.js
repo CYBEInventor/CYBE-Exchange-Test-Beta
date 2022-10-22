@@ -77,7 +77,7 @@ const withdrawHandler = (e, token) => {
         transferTokens(provider, exchange, 'Withdraw', token, token2TransferAmount, dispatch);
         setToken2TransferAmount(0);
     }
-    console.log("withdrawing tokens")
+    // console.log("withdrawing tokens")
 }
 
 useEffect(() => {
@@ -85,7 +85,7 @@ useEffect(() => {
         loadBalances(exchange, tokens, account, dispatch);
         //      ^^^^ getting everything with slices to the store (useSelector)
     }
-}, [exchange, tokens, account, transferInProgress]);
+}, [exchange, tokens, account, transferInProgress, dispatch]);
     return (
       <div className='component exchange__transfers'>
         <div className='component__header flex-between'>
@@ -137,7 +137,7 @@ useEffect(() => {
           </div>
                     {/* START HERE ... LOGIC ERROR HERE */}
           <form onSubmit={isDeposit ? (e) => depositHandler(e, tokens[1]) : (e) => withdrawHandler(e, tokens[1])}>
-            <label htmlFor="token1"></label>
+          <label htmlFor="token0">{symbols && symbols[1]} Amount</label>
             <input 
             type="text" 
             id='token1' 

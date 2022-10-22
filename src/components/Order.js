@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 /*         NOTES
 8/26/2022 - getting errors will continue tomorrow
     KEEP GOING FOR TRUE PEACE
+10/19/2022 - when a user doesnt have their wallet connected and they attempt a buy/sell order, it gets a litttle janky 
 */
 
 const Order = () => {

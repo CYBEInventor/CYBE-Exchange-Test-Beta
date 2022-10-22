@@ -201,6 +201,7 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
                 ...state,
                 balances: [...state.balances, action.balance]
             }
+            // TRANSFER CASES (DEPOSIT & WITHDRAWS)
         case 'TRANSFER_REQUEST':
             return{
                 ...state,

@@ -21,6 +21,7 @@ import OrderBook from "./OrderBook";
 import PriceChart from "./PriceChart";
 import Trades from "./Trades";
 import Transactions from './Transactions';
+import Alert from "./Alert";
 
 /*    OVERALL NOTES
   when the user isnt on the specific blockchain and connects their wallet, they are not prompt on the selection of blockchains.
@@ -127,6 +128,7 @@ const dispatch = useDispatch();
       </main>
 
       {/* Alert */}
+      <Alert />
 
     </div>
   );

@@ -4,7 +4,7 @@ async function main() {
   console.log(`Preparing Deployment...\n`);
   // Fetch Token Contract To Deploy
   const Token = await ethers.getContractFactory("Token");
-  // Fetch Exchange Contract To Deployt
+  // Fetch Exchange Contract To Deploy
   const Exchange = await ethers.getContractFactory("Exchange");
 
   // Fetching accounts

@@ -187,7 +187,8 @@ export const makeSellOrder = async (provider, exchange, tokens, order, dispatch)
             - In hardhat, there is an error when having multiple instance of the same object which conflict with redux. 
             (This will probably be fixed in later versions)
 
-            - Also so far from 23. Make order i can make order while not logged in.. (potential error overall error course wise)
+            - Also so far from 23. Make order i can make order while the wallet is not connected.. (potential error overall error course wise)
+            - its janky, because a few times the wallet wouldn't be notified of a transaction... 10/19/2022
     */
 
         const tokenGet = tokens[1].address;
