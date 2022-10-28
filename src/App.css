@@ -6,7 +6,7 @@
 	--clr-neutral: #767F92;
 
 	--clr-white: #F1F2F9;
-	--clr-blue: #2187D0;
+	--clr-blue: #e2a80e;
 	--clr-red: #F45353;
 	--clr-green: #25CE8F;
 }
@@ -26,6 +26,9 @@ html {
 
 main {
 	min-height: 100vh;
+	/* max-height: 100vh; */
+	/* ^ this fixed the alert pop up error but limits any kind of growth vertically */
+	/* ^^ for final live version */
 }
 
 /* ------------------------------------------------------ */
@@ -622,6 +625,11 @@ table td {
 .alert--remove {
 	opacity: 0;
 	pointer-events: none;
+}
+
+.alert--flex {
+	background: var(--clr-primary);
+	/* Its fixed by making a max-height but that menas im capping the vertical flexibility */
 }
 
 /* ------------------------------------------------------ */

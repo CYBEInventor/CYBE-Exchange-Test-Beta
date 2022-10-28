@@ -3,7 +3,7 @@
     "exchange": {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
     },
-    "Dapp": {
+    "Cybe": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     },
     "mETH": {
@@ -15,6 +15,18 @@
     "explorerURL": "#"
   },
   "5": {
+    "exchange": {
+      "address": "0x2815fB6dF382f33eCEdC65d01536987F42Cd18Ea"
+    },
+    "Cybe": {
+      "address": "0x16a6a6c513a9307FC29d24f27c424B297DFC9C12"
+    },
+    "mETH": {
+      "address": "0x24D386d73F0a0824E7830Cc0b04DF4A2A3F4cF74"
+    },
+    "mDAI": {
+      "address": "0xA27Ed4be965c7160d9710a7c5694cdA988f4aA94"
+    },
     "explorerURL": "https://goerli.etherscan.io/"
   }
 }

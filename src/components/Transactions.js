@@ -6,6 +6,10 @@ import sort from '../assets/sort.svg';
 import { cancelOrder } from '../store/interactions';
 import Banner from "./Banner";
 
+/*    NOTES
+  - 
+*/
+
 const Transactions = () => {
   const [showMyOrders, setShowMyOrders] = useState(true)
   const provider = useSelector(state => state.provider.connection)

@@ -1,11 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
-import Dapp from '../assets/dapp.svg';
+import Cybe from '../assets/Temp-CYBE-Small.png';
+// import Cybe from '../assets/dapp.svg';
+// import Cybe from '../assets/Cybe.svg';
 import eth from '../assets/eth.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadBalances, transferTokens } from '../store/interactions';
 
-/*      OVERALL NOTES
-    The front end crashes when changing exchanges
+/*      NOTES
+    The front end crashes when changing markets (Becuse of options that arent ready)
+    - I need to make sure the balances are updates when a successful order (beta V1)
 */
 
 const Balance = () => {
@@ -22,6 +25,7 @@ const tokenBalances = useSelector(state => state.tokens.balances);
 const exchangenBalances = useSelector(state => state.exchange.balances);
 const transferInProgress = useSelector(state => state.exchange.transferInProgress);
 const provider = useSelector(state => state.provider.connection);
+// const isSuccessful = useSelector(state => state.exchange.transaction.isSUccessful);
 
     const depositRef = useRef(null);
     const withdrawRef = useRef(null);
@@ -86,6 +90,17 @@ useEffect(() => {
         //      ^^^^ getting everything with slices to the store (useSelector)
     }
 }, [exchange, tokens, account, transferInProgress, dispatch]);
+useEffect(() => {
+  // if(AllEvents){
+  //   console.log("A trade happened")
+  // }
+  // AllEvents.filter((z) => {
+  //   if(z.event == 'Trade'){
+  //     console.log("A trade happened")
+  //   }
+  // })
+  
+}, [])
     return (
       <div className='component exchange__transfers'>
         <div className='component__header flex-between'>
@@ -100,7 +115,7 @@ useEffect(() => {
   
         <div className='exchange__transfers--form'>
           <div className='flex-between'>
-            <p><small>Token</small><br /><img src={Dapp} alt="Token Logo" />{symbols && symbols[0]}</p>
+            <p><small>Token</small><br /><img src={Cybe} alt="Token Logo" />{symbols && symbols[0]}</p>
             <p><small>Wallet</small><br />{tokenBalances && tokenBalances[0]}</p>
             <p><small>Exchange</small><br />{exchangenBalances && exchangenBalances[0]}</p>
           </div>
@@ -137,7 +152,7 @@ useEffect(() => {
           </div>
                     {/* START HERE ... LOGIC ERROR HERE */}
           <form onSubmit={isDeposit ? (e) => depositHandler(e, tokens[1]) : (e) => withdrawHandler(e, tokens[1])}>
-          <label htmlFor="token0">{symbols && symbols[1]} Amount</label>
+          <label htmlFor="token1">{symbols && symbols[1]} Amount</label>
             <input 
             type="text" 
             id='token1' 

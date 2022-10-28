@@ -3,6 +3,10 @@ import { filledOrdersSelector } from "../store/selectors";
 import sort from '../assets/sort.svg';
 import Banner from "./Banner";
 
+/*    NOTES
+  - 
+*/
+
 const Trades = () => {
     const filledOrders = useSelector(filledOrdersSelector)
     const symbols = useSelector(state => state.tokens.symbols)

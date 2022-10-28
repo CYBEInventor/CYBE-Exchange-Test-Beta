@@ -4,6 +4,10 @@ import EXCHANGE_ABI from '../abis/Exchange.json';
 // import { exchange } from "./reducers";
 // import { provider } from "./reducers";
 
+/*      NOTES
+    - I will use the SubscribeToEvents to look at all events fromt the exchange (DONE)
+*/
+
 export const loadProvider = (dispatch) => {
     const connection = new ethers.providers.Web3Provider(window.ethereum);
     dispatch({ type: 'PROVIDER_LOADED', connection });
@@ -55,30 +59,48 @@ export const loadExchange = async(provider, address, dispatch) => {
 
 // Subscribe To Events
 export const SubscribeToEvents = (exchange, dispatch) => {
+    // let Deposit = false, Withdraw = false, Order = false, Cancel = false, Trade = false;
+    // ^^ not working
     exchange.on('Deposit', (token, user ,amount ,balance, event) => {
     // [] Step 4: Notify app that transfer was successful
         dispatch({ type: 'TRANSFER_SUCCESS', event })
+        console.log("Deposit Went Off")
+        // Deposit = true;
+        // ^^ not working
     });
 
     exchange.on('Withdraw', (token, user ,amount ,balance, event) => {
     // [] Step 4: Notify app that transfer was successful
         dispatch({ type: 'TRANSFER_SUCCESS', event })
+        console.log("Withdraw Went Off")
+        // Withdraw = true;
+        // ^^ not working
     });
     
     exchange.on('Order', (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event) => {
         const order = event.args;
         dispatch({ type: 'NEW_ORDER_SUCCESS', order, event })
+        console.log("Order Went Off")
+        // Order = true;
+        // ^^ not working
     });
 
     exchange.on('Cancel', (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event) => {
         const order = event.args;
         dispatch({ type: 'ORDER_CANCEL_SUCCESS', order, event })
+        console.log("Cancel Went Off")
+        // Cancel = true;
+        // ^^ not working
     });
 
     exchange.on('Trade', (id, user, tokenGet, amountGet, tokenGive, amountGive, creator, timestamp, event) => {
         const order = event.args;
         dispatch({ type: 'ORDER_FILL_SUCCESS', order, event })
+        console.log("Trades Went Off")
+        // Trade = true;
+        // ^^ not working
     });
+    // return [Deposit, Withdraw, Order, Cancel, Trade]
 }
 
 // LOAD USER BALANCES (WALLET & EXCHANGE BALANCES)
@@ -157,6 +179,7 @@ export const makeBuyOrder = async (provider, exchange, tokens, order, dispatch) 
             (This will probably be fixed in later versions)
 
             - Also so far from 23. Make order i can make order while not logged in.. (potential error overall error course wise)
+            - Depending on fan feedback, i will make sell/buy orders where you have to be connected or show the alert functionality correctly
     */
 
         const tokenGet = tokens[0].address;
@@ -189,6 +212,7 @@ export const makeSellOrder = async (provider, exchange, tokens, order, dispatch)
 
             - Also so far from 23. Make order i can make order while the wallet is not connected.. (potential error overall error course wise)
             - its janky, because a few times the wallet wouldn't be notified of a transaction... 10/19/2022
+            - Depending on fan feedback, i will make sell/buy orders where you have to be connected or show the alert functionality correctly
     */
 
         const tokenGet = tokens[1].address;

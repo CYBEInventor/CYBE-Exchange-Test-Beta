@@ -3,7 +3,12 @@ import { useRef, useEffect } from "react";
 
 import { myEventsSelector } from "../store/selectors";
 
-import config from '../config.json'
+import config from '../config.json';
+
+/*    NOTES
+  - This component will make the window not configure correctly when it acts as a pop up (FIXED)
+
+*/
 
 const Alert = () => {
     const alertRef = useRef(null);
@@ -14,7 +19,7 @@ const Alert = () => {
     const isError = useSelector(state => state.exchange.transaction.isError);
 
     const events = useSelector(myEventsSelector);
-
+    
     const removeHandler = async (e) => {
         alertRef.current.className = 'alert--remove'
     } 
@@ -26,7 +31,7 @@ const Alert = () => {
     }, [events, isPending, isError, account])
 
     return (
-        <div>
+        <div className="alert--flex">
           {isPending ? (
             <div className="alert alert--remove" ref={alertRef} onClick={removeHandler}>
               <h1>Transaction Pending...</h1>
@@ -52,6 +57,7 @@ const Alert = () => {
           }
         
       </div>
+      
     );
   }
   

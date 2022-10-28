@@ -13,9 +13,9 @@ async function main() {
 
 
   // Deploy Contracts
-  const dapp = await Token.deploy('Dapp University', 'DAPP', '1000000');
-  await dapp.deployed();
-  console.log(`DAPP Deployed To: ${dapp.address}`);
+  const cybe = await Token.deploy('Cyber Connect', 'CYBE', '1000000');
+  await cybe.deployed();
+  console.log(`CYBE Deployed To: ${cybe.address}`);
 
   const mETH = await Token.deploy('mETH', 'mETH', '1000000');
   await mETH.deployed();
@@ -27,7 +27,7 @@ async function main() {
 
   const exchange = await Exchange.deploy(accounts[1].address, 10);
   //                                    ^^^^ the fee account
-  //                                                   ^^^^ the percentage
+  //                                                   ^^^^ the fee percentage
   await exchange.deployed();
   console.log(`Exchange Deployed To: ${exchange.address}`);
 }

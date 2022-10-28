@@ -1,9 +1,15 @@
-import logo from '../assets/logo.png';
+import logo from '../assets/Temporary-CYBE-Logo.png';
+// import logo from '../assets/logo.png';
 import eth from '../assets/eth.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import Blockies from 'react-blockies';
 import { loadAccount } from '../store/interactions';
 import config from '../config.json';
+
+/*    NOTES
+  - Take away the "LocalHost" option in the official beta (beta V1)
+  - Get the users current hot wallet image if they have one to replace the Blockies component (beta V1)
+*/
 
 const Navbar = () => {
     const provider = useSelector(state => state.provider.connection);
@@ -30,7 +36,7 @@ const Navbar = () => {
         {/* ^^^ This Attribute has to be "className" instead of "class" for React since its a name clash */}
         <div className='exchange__header--brand flex'>
             <img src={logo} className='logo' alt='Dapp Logo'></img>
-           <h1>Dapp Token Exchange</h1>
+           <h1>Cybe Token Exchange</h1>
         </div>
   
         <div className='exchange__header--networks flex'>

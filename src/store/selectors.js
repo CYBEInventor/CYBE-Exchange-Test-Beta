@@ -3,6 +3,10 @@ import { get, groupBy, reject, maxBy, minBy } from "lodash";
 import { ethers } from "ethers";
 import moment from "moment";
 
+/*      NOTES
+    - 
+*/
+
 const tokens = state => get(state, 'tokens.contracts');
 const account = state => get(state, 'provider.account');
 const allOrders = state => get(state, 'exchange.allOrders.data', []);
@@ -30,9 +34,12 @@ const openOrders = state => {
 // MY EVENTS
 export const myEventsSelector = createSelector(account, events, (account, events) => {
     events = events.filter((e) => e.args.user === account)
-    console.log(events)
+    // console.log(events)
     return events
 })
+
+// --------------------------------------------------------------------------
+// ALL EVENTS - ALL EVENTS IS IN THE "interactions.js" file
 
 // --------------------------------------------------------------------------
 // MY OPEN ORDERS
@@ -114,7 +121,7 @@ export const filledOrdersSelector = createSelector(filledOrders, tokens, (orders
 
     // [x] Step 1: sort orders by time ascending
     // [x] Step 2: apply order colors (decorate orders)
-    // Step 3: sort orders by time descending for UI
+    // [x] Step 3: sort orders by time descending for UI
 
     // Sort orders by date ascending to compare history
     orders = orders.sort((a, b) => a.timestamp - b.timestamp)

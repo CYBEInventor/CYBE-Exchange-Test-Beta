@@ -2,7 +2,7 @@ export const options = {
     chart: {
       animations: { enabled: true },
       toolbar: { show: false },
-      width: '100px'
+      width: '100%'
     },
     tooltip: {
       enabled: true,
@@ -69,7 +69,7 @@ export const options = {
         },
         offsetX: 0,
         offsetY: 0,
-        rotate: 0,
+        rotate: 40,
       }
     }
   }

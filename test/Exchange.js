@@ -4,14 +4,14 @@ const { expect } = require("chai");
 const tokens = (N) => ethers.utils.parseUnits(N.toString(), 'ether');
 
 describe("Exchange", function () {
-  let deployer, feeAccount, exchange;
+  let deployer, feeAccount, exchange, token1, token2, accounts, user1, user2;
   const feePercent = 10;
   beforeEach(async () => {
     // Fetch Exchange From Blockchain
     const Exchange = await ethers.getContractFactory("Exchange");
     const Token = await ethers.getContractFactory("Token");
     
-    token1 = await Token.deploy('Dapp University', 'DAPP', '1000000');
+    token1 = await Token.deploy('Cyber Connect', 'CYBE', '1000000');
     token2 = await Token.deploy('Mock Dai', 'mDAI', '1000000');
 
     accounts = await ethers.getSigners();

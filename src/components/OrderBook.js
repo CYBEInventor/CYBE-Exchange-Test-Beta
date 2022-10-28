@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // Import Assets
 import sort from '../assets/sort.svg';
@@ -7,6 +8,10 @@ import { orderBookSelector } from "../store/selectors";
 // Import Interactions
 import { fillOrder } from "../store/interactions";
 
+/*    NOTES
+  - Maybe increase min-height of orderbook depending on fan feedback (Beta V1)
+*/
+
 const OrderBook = () => {
     const provider = useSelector(state => state.provider.connection);
     const exchange = useSelector(state => state.exchange.contract);
@@ -15,11 +20,22 @@ const OrderBook = () => {
     // COMPLEX SLICES .. createSelector
     const orderBook = useSelector(orderBookSelector);
 
+
     const dispatch = useDispatch();
 
     const fillOrderHandler = (order) => {
       fillOrder(provider, exchange, order, dispatch)
+      
     }
+    // useEffect(() =>{
+    //   const CopyOfEvents = Array.from(AllEvents)
+    //   console.log(CopyOfEvents.length, AllEvents.length)
+    //   if(AllEvents.length > CopyOfEvents.length){
+    //     console.log("Events Changed")
+    //   }
+    // },[])
+    // This for all events
+    // I'll go with a change in events to trigger a load balance 
     return (
       <div className="component exchange__orderbook">
         <div className='component__header flex-between'>
@@ -56,7 +72,7 @@ const OrderBook = () => {
           </table>
         )}
           <div className='divider'></div>
-          {!orderBook || orderBook.sellOrders.length === 0 ? (
+          {!orderBook || orderBook.buyOrders.length === 0 ? (
             <p className="flex-center">No Buy Orders</p>
           ) : (
           <table className='exchange__orderbook--buy'>
@@ -69,7 +85,7 @@ const OrderBook = () => {
               </tr>
             </thead>
             <tbody>
-              {/* MAPPING OF SELL ORDERS... */}
+              {/* MAPPING OF BUY ORDERS... */}
               {orderBook && orderBook.buyOrders.map((order, index) => {
                 return (
                   <tr key={index} onClick={() => fillOrderHandler(order)}>

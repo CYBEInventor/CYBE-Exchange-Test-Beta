@@ -5,7 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 /*         NOTES
 8/26/2022 - getting errors will continue tomorrow
     KEEP GOING FOR TRUE PEACE
-10/19/2022 - when a user doesnt have their wallet connected and they attempt a buy/sell order, it gets a litttle janky 
+10/19/2022 - when a user doesnt have their wallet connected and they attempt a buy/sell order, it gets a little janky 
+10/23/2022 -  - Depending on fan feedback, i will make sell/buy orders where you have to be connected or show the alert functionality correctly
+-^ i would fix this by checking if the account is connected inside of the buyHandler/sellHandler  (beta v1)
+-^^ i can tell this logic to this alert as well if i want too
 */
 
 const Order = () => {
